@@ -1,10 +1,11 @@
 class GSForms {
-    constructor({loadingEl, log}){
+    constructor({loadingEl, log, callback}){
         this.formSelector = ".gs-form";
         this.formData = {};
         this.init();
         this.loadingEl = loadingEl;
         this.log = log == undefined ? false : log;
+        this.callback = callback;
     }
     init = () =>{
         const forms = document.querySelectorAll(this.formSelector);
@@ -39,6 +40,10 @@ class GSForms {
                         btn.innerHTML = innerText;
 
                         if(e.ok){
+                            // if request was successful
+                            if(typeof this.callback != "undefined"){
+                                this.callback();
+                            }
                             alertClass = "alert-success";
                         }
                         return e.text();
@@ -46,7 +51,7 @@ class GSForms {
                         const alertBox = `<div class="alert ${alertClass} alert-dismissible fade show"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> ${txt} </div>`;
 
                         if(alertClass && txt){
-                            form.querySelector(".messages").insertAdjacentHTML("beforeend", alertBox);
+                            form.querySelector(".messages")?.insertAdjacentHTML("beforeend", alertBox);
                             form.reset();
                         }
                     })
